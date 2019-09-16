@@ -21,8 +21,8 @@ public class ParserFacade {
 
     private File file;
 
-    public synchronized void setFile(File f) {
-        file = f;
+    public synchronized void setFile(File fileInput) {
+        file = fileInput;
     }
 
     public synchronized Optional<File> getFile() {
@@ -34,25 +34,28 @@ public class ParserFacade {
     }
 
     public String getContent() throws IOException {
-        FileInputStream i = new FileInputStream(file);
+        @SuppressWarnings("resource")
+		FileInputStream input = new FileInputStream(file);
         String output = "";
         int data;
-        while ((data = i.read()) > 0) output += (char) data;
+        while ((data = input.read()) > 0) output += (char) data;
         return output;
     }
     public String getContentWithoutUnicode() throws IOException {
-        FileInputStream i = new FileInputStream(file);
+        @SuppressWarnings("resource")
+		FileInputStream inputStream = new FileInputStream(file);
         String output = "";
         int data;
-        while ((data = i.read()) > 0) if (data < 0x80) {
+        while ((data = inputStream.read()) > 0) if (data < 0x80) {
             output += (char) data;
         }
         return output;
     }
     public void saveContent(String content) throws IOException {
-        FileOutputStream o = new FileOutputStream(file);
-        for (int i = 0; i < content.length(); i += 1) {
-            o.write(content.charAt(i));
+        @SuppressWarnings("resource")
+		FileOutputStream output = new FileOutputStream(file);
+        for (int row = 0; row < content.length(); row += 1) {
+            output.write(content.charAt(row));
         }
     }
 }
